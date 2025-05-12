@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>產品資料查詢工具</title>
+  <style>
+    body {
+      font-family: 'Heebo', Arial, sans-serif;
+      background: #f4f4f4;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h2 {
+      color: #434447;
+    }
+
+    h3 {
+      color: #0e82f0;
+    }
+
+    form {
+      margin: 20px auto;
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 10px;
+      display: inline-block;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .upload-box {
+      border: 2px dashed #3182f6;
+      border-radius: 12px;
+      padding: 40px 20px;
+      background-color: #fff;
+      color: #333;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      min-width: 320px;
+      position: relative;
+    }
+
+    #loading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+      color: #0e82f0;
+      z-index: 10;
+      display: none; /* 預設隱藏 */
+    }
+
+    #loading img {
+      width: 72px;
+    }
+
+    .upload-box.success {
+      border-color: #2ecc71;
+      background-color: #f0f9ff;
+    }
+
+    .upload-icon {
+      width: 96px;
+      height: 96px;
+      object-fit: contain;
+      transition: all 0.3s ease;
+    }
+
+    .upload-box.success .upload-icon {
+      color: #2ecc71;
+    }
+
+    .upload-text {
+      font-size: 16px;
+      color: #434447;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .submit-button {
+      margin-top: 20px;
+      padding: 10px 24px;
+      background-color: #3182f6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .submit-button:hover {
+      background-color: #246cd3;
+    }
+    .submit-button:disabled {
+      background-color: #E8ECEF;
+    }
+
+
+    table {
+      margin: 20px auto 32px auto;
+      border-collapse: collapse;
+      width: 90%;
+      background: white;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      table-layout: fixed;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: left;
+      font-size: 13px;
+      word-wrap: break-word;
+      white-space: normal;
+    }
+
+    th {
+      background-color: #0e82f0;
+      color: white;
+    }
+
+    td a {
+      color: #0e82f0;
+      text-decoration: none;
+    }
+
+    td a:hover {
+      text-decoration: underline;
+    }
+
+    .download-section {
+      margin-top: 20px;
+    }
+    .download-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px; 
+      padding: 10px 20px;
+      background-color: #0e82f0;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .download-button:hover {
+      background-color: #065ec9;
+    }
+
+    .icon-img {
+      width: 20px;
+      height: 20px;
+    }
+  </style>
+
+  <script>
+    function showLoading() {
+      document.getElementById("loading").style.display = "flex";
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("submit-btn").disabled = true;
+      const dropArea = document.getElementById("drop-area");
+      const fileInput = document.getElementById("csv_file");
+      const label = document.getElementById("upload-label");
+      const icon = document.getElementById("upload-icon");
+
+      dropArea.addEventListener("click", () => fileInput.click());
+
+      dropArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropArea.style.backgroundColor = "#e1f0ff";
+      });
+
+      dropArea.addEventListener("dragleave", () => {
+        dropArea.style.backgroundColor = "#ffffff";
+      });
+
+      dropArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        fileInput.files = e.dataTransfer.files;
+        handleFileUpload(fileInput.files[0]);
+      });
+
+      fileInput.addEventListener("change", () => {
+        if (fileInput.files.length > 0) {
+          handleFileUpload(fileInput.files[0]);
+        }
+      });
+
+      function handleFileUpload(file) {
+        label.textContent = file.name;
+        icon.src = "https://irp.cdn-website.com/56869327/dms3rep/multi/check_circle_24dp_E8EAED_FILL0_wght200_GRAD0_opsz24+1.png"; 
+        dropArea.classList.add("success");
+        document.getElementById("submit-btn").disabled = false;
+      }
+      
+    });
+  </script>
+</head>
+<body>
+
+  <h2>產品資料查詢工具</h2>
+
+  <form method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
+    <div class="upload-box" id="drop-area">
+      <img class="upload-icon" id="upload-icon" src="https://irp.cdn-website.com/56869327/dms3rep/multi/upload_file_24dp_E8EAED_FILL0_wght200_GRAD0_opsz24.png" alt="upload icon">
+      <div class="upload-text" id="upload-label">Click to upload CSV</div>
+      <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
+    </div>
+    <div id="loading">
+      <img src="https://irp.cdn-website.com/56869327/dms3rep/multi/loading-2.gif" alt="loading..." style="width: 96px; padding-top: 24px;">
+      <p>Loading...</p>
+    </div>
+    <button type="submit" class="submit-button" id="submit-btn" disabled>查詢</button>
+  </form>
+
+  {% if results %}
+    <h3>查詢結果：</h3>
+    <table>
+      <tr>
+        <th>Product Name</th>
+        <th>Part Number Desc</th>
+        <th>Product Price</th>
+        <th>Product Link</th>
+      </tr>
+      {% for r in results %}
+      <tr>
+        <td>{{ r["Product Name"] }}</td>
+        <td>{{ r["Part NumberDesc"] | safe }}</td>
+        <td>{{ r["Product Price"] }}</td>
+        <td><a href="{{ r["Product Link"] }}" target="_blank">{{ r["Product Link"] }}</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+
+  {% if download_file %}
+    <div class="download-section">
+      <a href="{{ url_for('download', filename=download_file) }}">
+        <button class="download-button">
+          <img src="https://irp.cdn-website.com/56869327/dms3rep/multi/download_24dp_E8EAED_FILL0_wght200_GRAD0_opsz24.png" alt="download" class="icon-img">
+          下載結果 CSV
+        </button>
+      </a>
+    </div>
+  {% endif %}
+
+</body>
+</html>
